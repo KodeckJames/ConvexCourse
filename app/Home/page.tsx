@@ -10,7 +10,7 @@ export default function HomePage() {
   return (
     <div className=" min-h-dvh flex justify-center flex-col items-center">
       <h1 className=" text-4xl text-blue-500 font-extrabold">HomePage</h1>
-      <form onSubmit={(e) => {
+      <form  onSubmit={(e) => {
         e.preventDefault();
         const form = e.target as HTMLFormElement;
         const formData = new FormData(form);
@@ -18,7 +18,7 @@ export default function HomePage() {
         void createNote({ note });
         form.reset();
       }}>
-        <input type="text" className=" bg-white border border-white" />
+        <input name="note" type="text" className=" bg-white border border-white" />
         <button>Submit</button>
       </form>
     </div>

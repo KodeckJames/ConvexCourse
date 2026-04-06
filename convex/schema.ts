@@ -10,7 +10,12 @@ export default defineSchema({
     value: v.number(),
   }),
   notesTable: defineTable({
-    userId: v.id('users'),
+    userId: v.string(),
     note: v.string(),
-  })
+  }),
+  users: defineTable({
+    clerkId: v.string(),
+    email: v.string(),
+    name: v.optional(v.string()),
+  }).index("by_clerk_id", ["clerkId"]),  // index for fast lookup
 });

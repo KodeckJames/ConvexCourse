@@ -12,6 +12,7 @@ import { SignUpButton } from "@clerk/nextjs";
 import { SignInButton } from "@clerk/nextjs";
 import { UserButton } from "@clerk/nextjs";
 import HomePage from "@/app/Home/page";
+import NotesList from "@/app/NotesList/page";
 
 export default function Home() {
   return (
@@ -26,9 +27,10 @@ export default function Home() {
         </h1>
         <Authenticated>
           <HomePage />
+          <NotesList />
         </Authenticated>
         <Unauthenticated>
-          <HomePage />
+          <SignInForm />
         </Unauthenticated>
       </main>
     </>
