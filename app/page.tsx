@@ -3,6 +3,7 @@
 import {
   Authenticated,
   Unauthenticated,
+  useConvexAuth,
   useMutation,
   useQuery,
 } from "convex/react";
@@ -13,8 +14,30 @@ import { SignInButton } from "@clerk/nextjs";
 import { UserButton } from "@clerk/nextjs";
 import HomePage from "@/app/Home/page";
 import NotesList from "@/app/NotesList/page";
+import { useEffect } from "react";
+import { useUser } from "@clerk/nextjs";
 
 export default function Home() {
+  const { isAuthenticated } = useConvexAuth();
+  const { user } = useUser();
+  const upsertUser = useMutation(api.users.upsertUser);
+
+  useEffect(() => {
+    if (!isAuthenticated || !user) return;
+
+    upsertUser({
+      clerkId: user.id,
+      email: user.primaryEmailAddress!.emailAddress,
+      name: user.fullName ?? undefined,
+    });
+  }, [isAuthenticated, user, upsertUser]);
+  // const { isAuthenticated } = useConvexAuth();
+  // const addUser = useMutation(api.notes.addUser);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     addUser();
+  //   }
+  // }, [isAuthenticated, addUser]);
   return (
     <>
       <header className="sticky top-0 z-10 bg-background p-4 border-b-2 border-slate-200 dark:border-slate-800 flex flex-row justify-between items-center">

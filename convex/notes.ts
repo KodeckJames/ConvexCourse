@@ -38,6 +38,29 @@ export const createNote = mutation({
   },
 });
 
+export const addUser = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthorized");
+
+    const userId = identity.subject;
+
+    const existing = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", userId))
+      .unique();
+
+    if (existing) return;
+
+    await ctx.db.insert("users", {
+      clerkId: userId,
+      email: identity.email!,
+      name: identity.name ?? undefined,
+    });
+  },
+});
+
 // export const deleteNotes = internalMutation({
 //   args: {},
 //   handler: async (ctx, args) => {
