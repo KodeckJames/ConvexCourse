@@ -18,7 +18,7 @@ export default function HomePage() {
         void createNote({ note });
         form.reset();
       }}>
-        <input name="note" type="text" className=" rounded-2xl border border-white mt-4 mr-4" />
+        <input name="note" type="text" className=" rounded-xl border border-white p-2 mt-4 mr-4" />
         <button>Submit</button>
       </form>
     </div>

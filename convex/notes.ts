@@ -52,7 +52,7 @@ export const getNotes = query({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Unauthorized");
     const userId = identity.subject;
-    
+
     return await ctx.db
       .query("notesTable")
       .withIndex("by_userId", (q) => q.eq("userId", userId))
@@ -67,5 +67,24 @@ export const createNoteFile = internalAction({
   },
   handler: async (ctx, args) => {
     await ctx.storage.store(new Blob([args.note]));
+  },
+});
+
+// Deleting Notes
+export const deleteNotes = mutation({
+  args: {
+    noteId: v.id("notesTable"),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthorized");
+    const userId = identity.subject;
+    const note = await ctx.db.get(args.noteId);
+
+    if (!note || note.userId !== userId) {
+      throw new Error("Unauthorized");
+    }
+
+    await ctx.db.delete(note._id);
   },
 });
