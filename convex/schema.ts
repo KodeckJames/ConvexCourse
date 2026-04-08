@@ -12,7 +12,7 @@ export default defineSchema({
   notesTable: defineTable({
     userId: v.string(),
     note: v.string(),
-  }),
+  }).index("by_userId", ["userId"]),
   users: defineTable({
     clerkId: v.string(),
     email: v.string(),

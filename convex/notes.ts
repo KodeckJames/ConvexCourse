@@ -20,13 +20,14 @@ export const createNote = mutation({
     note: v.string(),
   },
   handler: async (ctx, args) => {
+    // const userId = await getAuthUserId(ctx);
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Unauthorized");
     const userId = identity.subject;
-    await rateLimiter.limit(ctx, "createNote", {
-      key: identity.subject,
-      throws: true,
-    });
+    // await rateLimiter.limit(ctx, "createNote", {
+    //   key: identity.subject,
+    //   throws: true,
+    // });
     await ctx.db.insert("notesTable", {
       userId,
       note: args.note,
@@ -37,21 +38,25 @@ export const createNote = mutation({
   },
 });
 
-export const deleteNotes = internalMutation({
-  args: {},
-  handler: async (ctx, args) => {
-    const notes = await ctx.db.query("notesTable").collect();
-    await Promise.all(notes.map((note) => ctx.db.delete(note._id)));
-  },
-});
+// export const deleteNotes = internalMutation({
+//   args: {},
+//   handler: async (ctx, args) => {
+//     const notes = await ctx.db.query("notesTable").collect();
+//     await Promise.all(notes.map((note) => ctx.db.delete(note._id)));
+//   },
+// });
 
 export const getNotes = query({
   args: {},
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Unauthorized");
-
-    return await ctx.db.query("notesTable").collect();
+    const userId = identity.subject;
+    
+    return await ctx.db
+      .query("notesTable")
+      .withIndex("by_userId", (q) => q.eq("userId", userId))
+      .collect();
   },
 });
 
