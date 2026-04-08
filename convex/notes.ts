@@ -2,6 +2,14 @@ import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { getAuthUserId } from "@convex-dev/auth/server";
 
+import { RateLimiter, MINUTE, HOUR } from "@convex-dev/rate-limiter";
+import { components } from "./_generated/api";
+
+const rateLimiter = new RateLimiter(components.rateLimiter , {
+  createNote: { kind: "fixed window", rate: 1, period: MINUTE },
+  
+});
+
 export const createNote = mutation({
   // args is the data sent from the frontend
   args: {
@@ -11,6 +19,7 @@ export const createNote = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Unauthorized");
     const userId = identity.subject;
+    await rateLimiter.limit(ctx, "createNote", {key: identity.subject, throws:true});
     // if (!userId) {
     //   throw new Error("Unauthorized");
     // }
