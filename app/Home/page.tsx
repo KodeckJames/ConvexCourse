@@ -8,7 +8,7 @@ export default function HomePage() {
   const createNote=useMutation(api.notes.createNote)
 
   return (
-    <div className=" min-h-dvh flex justify-center flex-col items-center">
+    <div className="flex flex-col items-center">
       <h1 className=" text-4xl text-blue-500 font-extrabold">HomePage</h1>
       <form  onSubmit={(e) => {
         e.preventDefault();
@@ -18,7 +18,7 @@ export default function HomePage() {
         void createNote({ note });
         form.reset();
       }}>
-        <input name="note" type="text" className=" bg-white border border-white" />
+        <input name="note" type="text" className=" rounded-2xl border border-white mt-4 mr-4" />
         <button>Submit</button>
       </form>
     </div>

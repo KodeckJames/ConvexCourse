@@ -13,7 +13,7 @@ export default function NotesList() {
       {notes.map((note) => (
         <div
           key={note._id}
-          className="bg-yellow-300 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow"
+          className="bg-yellow-300 rounded-lg p-6 text-black shadow-md hover:shadow-lg transition-shadow"
         >
           {note.note}
         </div>
