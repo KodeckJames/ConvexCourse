@@ -1,5 +1,5 @@
-import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { convexToJson, v } from "convex/values";
+import { internalMutation, mutation, query } from "./_generated/server";
 import { getAuthUserId } from "@convex-dev/auth/server";
 
 import { RateLimiter, MINUTE, HOUR } from "@convex-dev/rate-limiter";
@@ -29,6 +29,14 @@ export const createNote = mutation({
     });
   },
 });
+
+export const deleteNotes = internalMutation({
+  args: {},
+  handler: async (ctx, args) => {
+    const notes = await ctx.db.query("notesTable").collect();
+    await Promise.all(notes.map((note)=> ctx.db.delete(note._id)))
+  }
+})
 
 export const getNotes = query({
   args: {},
