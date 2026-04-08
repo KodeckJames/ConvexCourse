@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
@@ -9,10 +9,15 @@ export default function NotesList() {
     return <div>Loading...</div>;
   }
   return (
-    <div>
-      {notes.map((note) => {
-        return <div key={note._id}>{note.note}</div>;
-      })}
+    <div className="space-y-4 p-6">
+      {notes.map((note) => (
+        <div
+          key={note._id}
+          className="bg-yellow-300 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow"
+        >
+          {note.note}
+        </div>
+      ))}
     </div>
   );
 }
